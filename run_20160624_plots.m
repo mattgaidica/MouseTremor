@@ -42,7 +42,7 @@ legend(ko_mouseID,ct_mouseID);
 title([ko_mouseID,' vs. ',ct_mouseID,' Power Spectrum']);
 
 % plot 2,3
-startPlot = 1e5;
+startPlot = Fs * 30;
 plotSamples = round(Fs * 5);
 t = linspace(0,(plotSamples/Fs)*1000,plotSamples);
 
@@ -51,6 +51,7 @@ plot(t,LOGGER6410(startPlot:startPlot+plotSamples-1,2),'color',colors(1,:));
 xlabel('Time (ms)');
 ylabel('Amplitude (mV)');
 ylim([-50 50]);
+xlim([0 5000]);
 title([ko_mouseID,' Raw Piezo Waveform (5s)']);
 
 subplot(313);
@@ -58,4 +59,5 @@ plot(t,LOGGER817(startPlot:startPlot+plotSamples-1,2),'color',colors(2,:));
 xlabel('Time (ms)');
 ylabel('Amplitude (mV)');
 ylim([-50 50]);
+xlim([0 5000]);
 title([ct_mouseID,' Raw Piezo Waveform (5s)']);
