@@ -1,0 +1,20 @@
+actogramData = smooth(frameData(:,3));
+a = actogramData < 1.5;
+
+frameThresh = 20;
+compiledIdx = [];
+startIdx = [];
+for ii=1:length(a)
+    if a(ii) == 1
+        if isempty(startIdx)
+            startIdx = ii;
+    end
+    if a(ii) == 0
+        if ~isempty(startIdx) && ii - startIdx > frameThresh
+        compiledIdx = [compiledIdx; startIdx ii]
+        startIdx = [];
+    end
+        
+end
+
+figure;plot(actogramData);
