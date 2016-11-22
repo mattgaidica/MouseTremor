@@ -1,4 +1,4 @@
-subject = '6152';
+subject = '6154';
 videoFile = ['/Users/mattgaidica/Documents/Data/Videos for Tremor Analysis/edits/',subject,'.mov'];
 v = VideoReader(videoFile);
 resizeScale = 0.5;
@@ -46,21 +46,18 @@ realW = squeeze(mean(abs(W).^2, 2))';
 figure;
 subplot(211);
 imagesc(t,freqList,realW);
-set(gca, 'YDir', 'normal');
+set(gca, 'YDir', 'normal')
 xlim([t(1)+0.5 t(end)-0.5]);
 colormap(jet);
 xlabel('Time (s)');
 ylabel('Freq (Hz)');
 title(subject);
-caxis([0 50]);
-colorbar;
 
 subplot(212);
 plot(freqList,mean(realW,2));
 xlim(fpass);
 xlabel('Freq (Hz)');
-ylabel('Amplitude (arb. units)');
-ylim([0 40]);
+ylabel('Amplitude');
 
 % h = imfreehand;
 % mask = createMask(h);

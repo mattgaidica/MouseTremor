@@ -1,14 +1,17 @@
-function frameData = videoActogram(videoFile,frameInterval)
+function frameData = videoActogram(videoFile,frameInterval,resizeScale,pos)
 
 frameData = []; % [frame, time, diff]
 v = VideoReader(videoFile);
-resizeScale = 0.5;
+% resizeScale = 0.5;
 
-frame = read(v,1);
-frame = imresize(frame,resizeScale);
-imshow(frame);
-h = imrect;
-pos = getPosition(h);
+if isempty(pos)
+    frame = read(v,1);
+    frame = imresize(frame,resizeScale);
+    figure;
+    imshow(frame);
+    h = imrect;
+    pos = getPosition(h);
+end
 
 v = VideoReader(videoFile);
 
@@ -16,6 +19,7 @@ allFrames = [];
 iFrame = 1;
 prevFrame = [];
 for ii=1:frameInterval:v.NumberOfFrames
+    disp([num2str(ii),'/',num2str(v.NumberOfFrames)]);
     frame = read(v,ii);
     frame = imresize(frame,resizeScale);
     frame = imcrop(frame,pos);
@@ -32,5 +36,3 @@ for ii=1:frameInterval:v.NumberOfFrames
     prevFrame = frame;
     iFrame = iFrame + 1;
 end
-
-%
