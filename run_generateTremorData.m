@@ -1,9 +1,12 @@
-subject = '6152';
-videoFile = ['/Users/mattgaidica/Documents/Data/Videos for Tremor Analysis/edits/',subject,'.mov'];
+% subject = '6152';
+% videoFile = ['/Users/mattgaidica/Documents/Data/Videos for Tremor Analysis/edits/',subject,'.mov'];
 v = VideoReader(videoFile);
 resizeScale = 0.5;
 
-frame = read(v,1);
+v.CurrentTime = 0.5;
+frame = readFrame(v);
+v.CurrentTime = 0;
+
 frame = imresize(frame,resizeScale);
 h1 = figure;
 imshow(frame);
@@ -16,8 +19,9 @@ v = VideoReader(videoFile);
 allFrames = [];
 ii = 1;
 h1 = figure;
+h = waitbar(0,'Analyzing video...');
 while hasFrame(v)
-    disp(['Frame ',num2str(ii)]);
+    waitbar(v.CurrentTime/v.Duration);
     frame = readFrame(v);
     frame = imresize(frame,resizeScale);
     frame = imcrop(frame,pos);
@@ -26,6 +30,7 @@ while hasFrame(v)
     allFrames(ii,:,:) = frameGray;
     ii = ii + 1;
 end
+close(h);
 close(h1);
 
 % imshow(frame);
@@ -52,7 +57,7 @@ colormap(jet);
 xlabel('Time (s)');
 ylabel('Freq (Hz)');
 title(subject);
-caxis([0 50]);
+% caxis([0 50]);
 colorbar;
 
 subplot(212);
@@ -60,7 +65,7 @@ plot(freqList,mean(realW,2));
 xlim(fpass);
 xlabel('Freq (Hz)');
 ylabel('Amplitude (arb. units)');
-ylim([0 40]);
+% ylim([0 40]);
 
 % h = imfreehand;
 % mask = createMask(h);
