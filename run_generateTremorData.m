@@ -1,5 +1,9 @@
 % subject = '6152';
 % videoFile = ['/Users/mattgaidica/Documents/Data/Videos for Tremor Analysis/edits/',subject,'.mov'];
+
+% videoFile = '/Users/mattgaidica/Dropbox/Projects/Dauer Lab/Mouse Tremor/6415-small-clip.mp4';
+videoFile = '/Users/mattgaidica/Dropbox/Projects/Dauer Lab/Mouse Tremor/phaseAmplify/6415-small-clip-FIRWindowBP-band3.00-12.00-sr30-alpha5-mp0-sigma0-scale1.00-frames1-148-octave.avi';
+subject = '6415 mag video';
 v = VideoReader(videoFile);
 resizeScale = 0.5;
 
@@ -38,12 +42,16 @@ close(h1);
 % pos = getPosition(h);
 
 Fs = round(v.FrameRate);
-fpass = [1 Fs/2];
-data = squeeze(reshape(allFrames,[size(allFrames,1) 1 size(allFrames,2)*size(allFrames,3) ]));
-% [W,freqList] = calculateComplexScalograms_EnMasse(data,'Fs',Fs,'fpass',fpass,'doplot',true);
+fpass = [3 13]; % this could really help clean up the data/artifacts
 
+% format as numSamples x numTrials (where samples = frames, trials = vectorized images)
+data = squeeze(reshape(allFrames,[size(allFrames,1) 1 size(allFrames,2)*size(allFrames,3)]));
+% the idea here is to only analyze pixels that move a lot and ignore
+% stationary ones, but with selecting ROI, this might only be useful to
+% reduce processing load and not entirely helpful as it ignores small
+% movements that might be important
 dataStd = std(data);
-dataAdj = data(:,dataStd > prctile(dataStd,50));
+dataAdj = data(:,dataStd > prctile(dataStd,80));
 
 [W,freqList,t] = calculateComplexScalograms_EnMasse(dataAdj,'Fs',Fs,'fpass',fpass,'doplot',false);
 realW = squeeze(mean(abs(W).^2, 2))';
@@ -66,6 +74,8 @@ xlim(fpass);
 xlabel('Freq (Hz)');
 ylabel('Amplitude (arb. units)');
 % ylim([0 40]);
+
+set(gcf,'color','white');
 
 % h = imfreehand;
 % mask = createMask(h);
